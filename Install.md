@@ -4,77 +4,63 @@
 
     sudo apt install cpufrequtils
 
-## Python3 Virtual env
+## Install uv
 
-    python3 -m venv venv
+[uv](https://docs.astral.sh/uv/) is used for Python package and project management.
 
-Activate virtual env
+Install uv:
 
-    source venv/bin/activate
+    curl -LsSf https://astral.sh/uv/install.sh | sh
 
-## Install Python requirements
+Or on macOS with Homebrew:
 
-### base requirements
+    brew install uv
 
-Command system (`Matrix.driver`)
+## Install Python dependencies
 
-    pip install underground
-    pip install numpy
-    pip install feedparser
-    pip install pydantic
-    pip install spotipy
-    pip install pillow
-    pip install unidecode
-    pip install beautifulsoup4
-    pip install psutil
+uv will automatically create a virtual environment in `.venv` and install all dependencies defined in `pyproject.toml`.
 
-    pip install RPi.GPIO
-    pip install gpiozero
+    uv sync
 
-Because of `underground` the pydantic version is fixed to 1.9.2
+This installs all dependencies including [RGBMatrixEmulator](https://github.com/ty-porter/RGBMatrixEmulator) for laptop/emulator mode.
 
-    underground 0.4.0 requires pydantic~=1.9.2
+### Running commands with uv
 
-However, forcing upgrade to 2.6.x seems to work
+Use `uv run` to execute commands within the virtual environment:
 
-    pip install  pydantic --upgrade
+    uv run matrix              # Run the matrix CLI
+    uv run python -m Matrix.driver.executor -l   # List commands
 
-API server (`Matrix.api`)
+Or activate the virtual environment manually:
 
-    pip install flask
-    pip install flask-restx
-    pip install flask-cors
+    source .venv/bin/activate
+    matrix                     # Run the matrix CLI
+    python -m Matrix.driver.executor -l
 
-### dev / experiment requirements
+### Development tools
 
-    pip install matplotlib
-    pip install RGBMatrixEmulator
-    pip install ruff
-    pip install pylint
-    
+Install dev tools like ruff for linting:
+
+    uv tool install ruff
+
+Run linting:
 
     ruff check --fix Matrix/
     ruff format Matrix
 
-[RGBMatrixEmulator](https://github.com/ty-porter/RGBMatrixEmulator) is used to simulate the LED Matrix and be able to run the code on a bare laptop.
-
-[matplotlib](https://matplotlib.org/) is used for some experimentations before moving the code to the LED Matrix rendering.
-
-### Installing rpi-rgb-led-matrix on the target system
-
-#### Python Install
+### Installing rpi-rgb-led-matrix on the target system (Raspberry Pi)
 
 On the target system, you want to run the code against the real [rpi-rgb-led-matrix](https://github.com/hzeller/rpi-rgb-led-matrix) lib.
 
 See https://github.com/hzeller/rpi-rgb-led-matrix to install on the target system.
 
-You can either install `rgbmatrix` from the `venv` or global to the system.
+You can either install `rgbmatrix` in the `.venv` or globally to the system.
 
-If `rgbmatrix` is installed in the "global python" you still need to make it available inside the `venv`.
+If `rgbmatrix` is installed in the "global python" you still need to make it available inside the `.venv`.
 
 One approach is:
 
-    cp -R /usr/local/lib/python3.11/dist-packages/rgbmatrix-0.0.1-py3.11-linux-aarch64.egg/rgbmatrix venv/lib/python3.11/site-packages/.
+    cp -R /usr/local/lib/python3.12/dist-packages/rgbmatrix-0.0.1-py3.12-linux-aarch64.egg/rgbmatrix .venv/lib/python3.12/site-packages/.
 
 #### snd_bcm2835
 

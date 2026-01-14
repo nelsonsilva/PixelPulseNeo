@@ -1,0 +1,31 @@
+[project]
+name = "pixelpulseneo"
+version = "0.1.0"
+description = "Drive a 3x64x64 LED Matrix from a RaspBerry Pi"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "feedparser>=6.0.12",
+    "pillow>=12.1.0",
+    "psutil>=7.2.1",
+    "pydantic>=2.10.6",
+    "python-dotenv>=1.2.1",
+    "requests>=2.32.5",
+    "rgbmatrixemulator>=0.11.1",
+    "spotipy>=2.25.2",
+    "underground>=1.0.2",
+    "unidecode>=1.4.0",
+]
+
+[project.scripts]
+matrix = "Matrix.driver.run:main"
+
+[tool.setuptools.packages.find]
+include = ["Matrix*"]
+
+[tool.uv]
+package = true
+override-dependencies = [
+    # Exclude Piomatter on non-RPi5 platforms (it only builds on Raspberry Pi 5)
+    "adafruit-blinka-raspberry-pi5-piomatter ; sys_platform == 'linux' and platform_machine == 'aarch64'",
+]

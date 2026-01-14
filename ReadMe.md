@@ -46,7 +46,7 @@ The default configuration is "Laptop mode" using RGBMatrixEmulator to display vi
 
 see [Usage.md](Usage.md) for details on how to use the CommandExecutor
 
-    python -m Matrix.driver.executor -c mta -d 200
+    uv run matrix -c mta -d 200
 
 
 See  [Matrix.driver](Matrix/driver) for the source and for more details on the internals.
